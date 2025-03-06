@@ -3,21 +3,51 @@
     <div class="q-pa-md">
       <q-list bordered separator>
         <q-item v-for="entry in entries" :key="entry.id">
-          <q-item-section>
+          <q-item-section class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
             {{ entry.name }}
           </q-item-section>
 
-          <q-item-section side>
-            {{ currencify(entry.amount) }}
+          <q-item-section side class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
+            {{ useCurrencify(entry.amount) }}
           </q-item-section>
         </q-item>
       </q-list>
     </div>
+    <q-footer>
+      <div class="row q-pa-sm q-col-gutter-sm">
+        <div class="col">
+          <q-input
+            outlined
+            dense
+            bg-color="white"
+            placeholder="Name"
+            model-value=""
+          />
+        </div>
+        <div class="col">
+          <q-input
+            outlined
+            dense
+            input-class="text-right"
+            bg-color="white"
+            placeholder="Amount"
+            model-value=""
+            type="number"
+            step="0.01"
+          />
+        </div>
+        <div class="col col-auto">
+          <q-btn round color="primary" dense icon="add" />
+        </div>
+      </div>
+    </q-footer>
   </q-page>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useCurrencify } from '../composables/useCurrencify.js'
+import { useAmountColorClass} from '../composables/useAmountColorClass.js'
 
 const entries = ref([
   {
@@ -41,23 +71,4 @@ const entries = ref([
     amount: 0
   }
 ])
-
-function currencify(amount) {
-  let posNegSymbol = ''
-  if (amount > 0) {
-    posNegSymbol = '+'
-  } else if (amount < 0) {
-    posNegSymbol = '-'
-  }
-
-  const currencySymbol = '$'
-
-  const amountPositive = Math.abs(amount)
-
-  const amountFormatted = amountPositive.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
-  return `${posNegSymbol} ${currencySymbol} ${amountFormatted}`
-}
 </script>
