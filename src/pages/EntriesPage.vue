@@ -13,8 +13,18 @@
         </q-item>
       </q-list>
     </div>
-    <q-footer>
-      <div class="row q-pa-sm q-col-gutter-sm">
+    <q-footer class="bg-transparent">
+      <div class="row q-mb-sm q-px-md q-py-sm shadow-up-3">
+        <div class="col text-grey-7 text-h6">
+          Balance:
+        </div>
+        <div
+          :class="useAmountColorClass(balance)"
+          class="col text-h6 text-right">
+          {{ useCurrencify(balance) }}
+        </div>
+      </div>
+      <div class="row q-px-sm q-pb-sm q-col-gutter-sm bg-primary">
         <div class="col">
           <q-input
             outlined
@@ -45,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useCurrencify } from '../composables/useCurrencify.js'
 import { useAmountColorClass} from '../composables/useAmountColorClass.js'
 
@@ -53,12 +63,12 @@ const entries = ref([
   {
     id: 'id1',
     name: 'Salary',
-    amount: 4999.99
+    amount: 4125.00
   },
   {
     id: 'id2',
     name: 'Rent',
-    amount: -700
+    amount: -720
   },
   {
     id: 'id3',
@@ -67,8 +77,19 @@ const entries = ref([
   },
   {
     id: 'id4',
+    name: 'Food',
+    amount: -800
+  },
+  {
+    id: 'id5',
     name: 'Unknown',
     amount: 0
   }
 ])
+
+const balance = computed(() => {
+  return entries.value.reduce((acc, { amount }) => {
+    return acc + parseFloat(amount)
+  }, 0)
+})
 </script>
