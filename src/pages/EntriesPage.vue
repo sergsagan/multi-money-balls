@@ -5,7 +5,7 @@
         <q-slide-item
           v-for="entry in entries"
           :key="entry.id"
-          @right="onRight"
+          @right="onEntrySlideRight($event, entry)"
           left-color="positive"
           right-color="negative"
         >
@@ -72,7 +72,11 @@
 import { computed, reactive, ref } from 'vue'
 import { useCurrencify } from '../composables/useCurrencify.js'
 import { useAmountColorClass} from '../composables/useAmountColorClass.js'
-import { uid } from 'quasar'
+import { uid, useQuasar } from 'quasar'
+
+const $q = useQuasar()
+
+const nameRef = ref(null)
 
 const entries = ref([
   {
@@ -102,13 +106,15 @@ const entries = ref([
   }
 ])
 
+/* balance */
+
 const balance = computed(() => {
   return entries.value.reduce((acc, { amount }) => {
     return acc + parseFloat(amount)
   }, 0)
 })
 
-const nameRef = ref(null)
+/* add entry */
 
 const entryFormDefault = {
   name: '',
@@ -128,5 +134,44 @@ const addEntry = () => {
   const newEntry = Object.assign({}, addEntryForm, {id: uid() })
   entries.value.push(newEntry)
   addEntryFormReset()
+}
+
+/* slide right */
+
+const onEntrySlideRight = ({ reset }, entry) => {
+  $q.dialog({
+    title: 'Delete Entry',
+    message: `
+      Delete this entry?
+      <div class="q-mt-md text-weight-bold ${ useAmountColorClass(entry.amount) }">
+      ${ entry.name } : ${ useCurrencify(entry.amount) }
+      </div>
+    `,
+    persistent: true,
+    html: true,
+    ok: {
+      label: 'Delete',
+      color: 'negative',
+      noCaps: true
+    },
+    cancel: {
+      color: 'primary',
+      noCaps: true
+    }
+  }).onOk(() => {
+    deleteEntry(entry.id)
+  }).onCancel(() => {
+    reset()
+  })
+}
+
+/* delete entry */
+const deleteEntry = (entryId) => {
+  const index = entries.value.findIndex(entry => entry.id === entryId)
+  entries.value.splice(index, 1)
+  $q.notify({
+    message: 'Entry deleted',
+    position: 'top',
+  })
 }
 </script>
