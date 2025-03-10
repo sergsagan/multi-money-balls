@@ -2,15 +2,26 @@
   <q-page>
     <div class="q-pa-md">
       <q-list bordered separator>
-        <q-item v-for="entry in entries" :key="entry.id">
-          <q-item-section class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
-            {{ entry.name }}
-          </q-item-section>
+        <q-slide-item
+          v-for="entry in entries"
+          :key="entry.id"
+          @right="onRight"
+          left-color="positive"
+          right-color="negative"
+        >
+          <template v-slot:right>
+            <q-icon name="delete" />
+          </template>
+          <q-item>
+            <q-item-section class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
+              {{ entry.name }}
+            </q-item-section>
 
-          <q-item-section side class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
-            {{ useCurrencify(entry.amount) }}
-          </q-item-section>
-        </q-item>
+            <q-item-section side class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
+              {{ useCurrencify(entry.amount) }}
+            </q-item-section>
+          </q-item>
+        </q-slide-item>
       </q-list>
     </div>
     <q-footer class="bg-transparent">
