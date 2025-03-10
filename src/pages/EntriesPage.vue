@@ -24,14 +24,17 @@
           {{ useCurrencify(balance) }}
         </div>
       </div>
-      <div class="row q-px-sm q-pb-sm q-col-gutter-sm bg-primary">
+      <q-form
+        @submit="addEntry"
+        class="row q-px-sm q-pb-sm q-col-gutter-sm bg-primary">
         <div class="col">
           <q-input
+            ref="nameRef"
             outlined
             dense
             bg-color="white"
             placeholder="Name"
-            model-value=""
+            v-model="addEntryForm.name"
           />
         </div>
         <div class="col">
@@ -41,23 +44,24 @@
             input-class="text-right"
             bg-color="white"
             placeholder="Amount"
-            model-value=""
+            v-model.number="addEntryForm.amount"
             type="number"
             step="0.01"
           />
         </div>
         <div class="col col-auto">
-          <q-btn round color="primary" dense icon="add" />
+          <q-btn round color="primary" type="submit" dense icon="add" />
         </div>
-      </div>
+      </q-form>
     </q-footer>
   </q-page>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useCurrencify } from '../composables/useCurrencify.js'
 import { useAmountColorClass} from '../composables/useAmountColorClass.js'
+import { uid } from 'quasar'
 
 const entries = ref([
   {
@@ -92,4 +96,26 @@ const balance = computed(() => {
     return acc + parseFloat(amount)
   }, 0)
 })
+
+const nameRef = ref(null)
+
+const entryFormDefault = {
+  name: '',
+  amount: null,
+}
+
+const addEntryForm = reactive({
+  ...entryFormDefault
+})
+
+const addEntryFormReset = () => {
+  Object.assign(addEntryForm, entryFormDefault )
+  nameRef.value.focus()
+}
+
+const addEntry = () => {
+  const newEntry = Object.assign({}, addEntryForm, {id: uid() })
+  entries.value.push(newEntry)
+  addEntryFormReset()
+}
 </script>
