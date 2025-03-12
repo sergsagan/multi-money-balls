@@ -8,27 +8,27 @@ export const useStoreEntries = defineStore("entries", () => {
   const entries = ref([
     {
       id: 'id1',
-      name: 'Salary',
+      category: 'Salary',
       amount: 4125.00
     },
     {
       id: 'id2',
-      name: 'Rent',
+      category: 'Rent',
       amount: -720
     },
     {
       id: 'id3',
-      name: 'Phone',
+      category: 'Phone',
       amount: -12.99
     },
     {
       id: 'id4',
-      name: 'Food',
+      category: 'Food',
       amount: -800
     },
     {
       id: 'id5',
-      name: 'Unknown',
+      category: 'Unknown',
       amount: 0
     }
   ])

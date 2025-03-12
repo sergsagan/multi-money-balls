@@ -1,3 +1,21 @@
+<script setup>
+const props = defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+
+  link: {
+    type: String,
+    default: '#'
+  },
+
+  icon: {
+    type: String,
+    default: ''
+  }
+})
+</script>
 <template>
   <q-item
     clickable
@@ -17,22 +35,3 @@
     </q-item-section>
   </q-item>
 </template>
-
-<script setup>
-const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-
-  link: {
-    type: String,
-    default: '#'
-  },
-
-  icon: {
-    type: String,
-    default: ''
-  }
-})
-</script>

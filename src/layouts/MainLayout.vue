@@ -1,3 +1,26 @@
+<script setup>
+import { ref } from 'vue'
+import NavLink from 'components/Nav/NavLink.vue'
+
+const navLinks = [
+  {
+    title: 'Entries',
+    icon: 'home',
+    link: '/'
+  },
+  {
+    title: 'Settings',
+    icon: 'settings',
+    link: '/settings'
+  }
+]
+
+const leftDrawerOpen = ref(false)
+
+function toggleLeftDrawer () {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+</script>
 <template>
   <q-layout view="hHh lpR lFf">
     <q-header elevated>
@@ -50,27 +73,3 @@
     </q-page-container>
   </q-layout>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import NavLink from 'components/Nav/NavLink.vue'
-
-const navLinks = [
-  {
-    title: 'Entries',
-    icon: 'home',
-    link: '/'
-  },
-  {
-    title: 'Settings',
-    icon: 'settings',
-    link: '/settings'
-  }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
-</script>
