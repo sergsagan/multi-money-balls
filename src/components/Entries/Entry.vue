@@ -53,10 +53,48 @@ const onEntrySlideRight = ({ reset }) => {
     <q-item>
       <q-item-section class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
         {{ entry.category }}
+        <q-popup-edit
+          :model-value="entry.category"
+          auto-save
+          v-slot="scope"
+          :cover="false"
+          anchor="top left"
+          :offset="[16, 12]"
+          buttons
+          label-set="Ok"
+        >
+          <q-input
+            v-model="scope.value"
+            dense
+            autofocus
+            input-class="text-weight-bold letter-spacing-none"
+            @keyup.enter="scope.set"
+          />
+        </q-popup-edit>
       </q-item-section>
 
       <q-item-section side class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
         {{ useCurrencify(entry.amount) }}
+        <q-popup-edit
+          :model-value="entry.amount"
+          auto-save
+          v-slot="scope"
+          :cover="false"
+          anchor="top left"
+          :offset="[16, 12]"
+          buttons
+          label-set="Ok"
+        >
+          <q-input
+            v-model.number="scope.value"
+            dense
+            autofocus
+            type="number"
+            step="0.01"
+            input-class="text-weight-bold letter-spacing-none text-right"
+            @keyup.enter="scope.set"
+          />
+        </q-popup-edit>
       </q-item-section>
     </q-item>
   </q-slide-item>
