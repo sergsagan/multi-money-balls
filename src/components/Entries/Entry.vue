@@ -40,6 +40,15 @@ const onEntrySlideRight = ({ reset }) => {
     reset()
   })
 }
+
+/* update name & amount */
+const onCategoryUpdate = value => {
+  storeEntries.updateEntry(props.entry?.id, { category: value })
+}
+
+const onAmountUpdate = value => {
+  storeEntries.updateEntry(props.entry?.id, { amount: value })
+}
 </script>
 <template>
   <q-slide-item
@@ -55,6 +64,7 @@ const onEntrySlideRight = ({ reset }) => {
         {{ entry.category }}
         <q-popup-edit
           :model-value="entry.category"
+          @save="onCategoryUpdate"
           auto-save
           v-slot="scope"
           :cover="false"
@@ -77,6 +87,7 @@ const onEntrySlideRight = ({ reset }) => {
         {{ useCurrencify(entry.amount) }}
         <q-popup-edit
           :model-value="entry.amount"
+          @save="onAmountUpdate"
           auto-save
           v-slot="scope"
           :cover="false"
