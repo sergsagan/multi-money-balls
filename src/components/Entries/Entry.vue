@@ -13,6 +13,12 @@ const $q = useQuasar()
 /* stores */
 const storeEntries = useStoreEntries()
 
+/* slide left */
+const onEntrySlideLeft = ({ reset }) => {
+  storeEntries.updateEntry(props.entry?.id, { paid: !props.entry?.paid })
+  reset()
+}
+
 /* slide right */
 const onEntrySlideRight = ({ reset }) => {
   $q.dialog({
@@ -52,15 +58,26 @@ const onAmountUpdate = value => {
 </script>
 <template>
   <q-slide-item
+    @left="onEntrySlideLeft"
     @right="onEntrySlideRight"
     left-color="positive"
     right-color="negative"
+    :class="{ 'bg-grey-2' : entry.paid }"
   >
+    <template v-slot:left>
+      <q-icon name="done" />
+    </template>
     <template v-slot:right>
       <q-icon name="delete" />
     </template>
     <q-item>
-      <q-item-section class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
+      <q-item-section
+        class="text-weight-bold"
+        :class="[
+          useAmountColorClass(entry.amount),
+          { 'text-strike' : entry.paid }
+        ]"
+      >
         {{ entry.category }}
         <q-popup-edit
           :model-value="entry.category"
@@ -83,7 +100,14 @@ const onAmountUpdate = value => {
         </q-popup-edit>
       </q-item-section>
 
-      <q-item-section side class="text-weight-bold" :class="useAmountColorClass(entry.amount)">
+      <q-item-section
+        side
+        class="text-weight-bold"
+        :class="[
+          useAmountColorClass(entry.amount),
+          { 'text-strike' : entry.paid }
+        ]"
+      >
         {{ useCurrencify(entry.amount) }}
         <q-popup-edit
           :model-value="entry.amount"

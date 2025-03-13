@@ -9,27 +9,32 @@ export const useStoreEntries = defineStore("entries", () => {
     {
       id: 'id1',
       category: 'Salary',
-      amount: 4125.00
+      amount: 4125.00,
+      paid: false,
     },
     {
       id: 'id2',
       category: 'Rent',
-      amount: -720
+      amount: -720,
+      paid: false,
     },
     {
       id: 'id3',
       category: 'Phone',
-      amount: -12.99
+      amount: -12.99,
+      paid: false,
     },
     {
       id: 'id4',
       category: 'Food',
-      amount: -800
+      amount: -800,
+      paid: false,
     },
     {
       id: 'id5',
       category: 'Unknown',
-      amount: 0
+      amount: 0,
+      paid: false,
     }
   ])
 
@@ -41,10 +46,16 @@ export const useStoreEntries = defineStore("entries", () => {
     }, 0)
   })
 
+  const balancePaid = computed(() => {
+    return entries.value.reduce((acc, { amount, paid   }) => {
+      return paid ? acc + amount : acc
+    }, 0)
+  })
+
   /* actions */
 
   const addEntry = addEntryForm => {
-    const newEntry = Object.assign({}, addEntryForm, {id: uid() })
+    const newEntry = Object.assign({}, addEntryForm, {id: uid(), paid: false })
     entries.value.push(newEntry)
   }
 
@@ -68,5 +79,5 @@ export const useStoreEntries = defineStore("entries", () => {
   }
 
   /* returns */
-  return { entries, balance, addEntry, deleteEntry, updateEntry }
+  return { entries, balance, balancePaid, addEntry, deleteEntry, updateEntry }
 })
