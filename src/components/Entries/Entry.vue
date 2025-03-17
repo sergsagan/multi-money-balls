@@ -3,6 +3,7 @@ import { useAmountColorClass } from 'src/composables/useAmountColorClass.js'
 import { useCurrencify } from 'src/composables/useCurrencify.js'
 import { useStoreEntries } from 'stores/storeEntries.js'
 import { useQuasar } from 'quasar'
+import vSelectAll from 'src/directives/directiveSelectAll.js'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -96,6 +97,7 @@ const onAmountUpdate = value => {
             autofocus
             input-class="text-weight-bold letter-spacing-none"
             @keyup.enter="scope.set"
+            v-select-all
           />
         </q-popup-edit>
       </q-item-section>
@@ -128,6 +130,7 @@ const onAmountUpdate = value => {
             step="0.01"
             input-class="text-weight-bold letter-spacing-none text-right"
             @keyup.enter="scope.set"
+            v-select-all
           />
         </q-popup-edit>
       </q-item-section>
@@ -136,7 +139,7 @@ const onAmountUpdate = value => {
         v-if="storeEntries.options.sort"
         side
       >
-     <q-icon name="reorder" color="primary" class="handle" />
+     <q-icon name="swap_vert" color="primary" class="handle" />
       </q-item-section>
     </q-item>
   </q-slide-item>

@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useStoreEntries } from 'stores/storeEntries.js'
+import vSelectAll from 'src/directives/directiveSelectAll.js'
 
 /* stores */
 const storeEntries = useStoreEntries()
@@ -39,6 +40,7 @@ const addEntryFormSubmit = () => {
         bg-color="white"
         placeholder="Category"
         v-model="addEntryForm.category"
+        v-select-all
       />
     </div>
     <div class="col">
@@ -51,6 +53,7 @@ const addEntryFormSubmit = () => {
         v-model.number="addEntryForm.amount"
         type="number"
         step="0.01"
+        v-select-all
       />
     </div>
     <div class="col col-auto">

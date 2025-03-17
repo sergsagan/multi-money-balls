@@ -11,7 +11,7 @@ const route = useRoute()
 const navLinks = [
   {
     title: 'Entries',
-    icon: 'home',
+    icon: 'payment',
     link: '/'
   },
   {

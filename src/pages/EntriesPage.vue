@@ -12,8 +12,14 @@ const storeEntries = useStoreEntries()
 <template>
   <q-page>
     <div class="q-pa-md">
-      <EmptyEntries v-if="!storeEntries.entries.length" />
-      <q-list v-else class="entries">
+      <transition
+        appear
+        enter-active-class="animated jackInTheBox slower"
+      >
+        <EmptyEntries v-if="!storeEntries.entries.length" />
+      </transition>
+
+      <q-list v-if="storeEntries.entries.length" class="entries">
         <Sortable
           @end="storeEntries.sortEnd"
           :list="storeEntries.entries"
@@ -29,7 +35,13 @@ const storeEntries = useStoreEntries()
       </q-list>
     </div>
     <q-footer class="bg-transparent">
-      <Balance />
+      <transition
+        appear
+        enter-active-class="animated fadeInUp"
+        leave-active-class="animated fadeOutUp"
+      >
+        <Balance v-if="storeEntries.entries.length" />
+      </transition>
       <AddEntry />
     </q-footer>
   </q-page>
