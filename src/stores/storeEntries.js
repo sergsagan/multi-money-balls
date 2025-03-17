@@ -82,7 +82,7 @@ export const useStoreEntries = defineStore("entries", () => {
 
   const balancePaid = computed(() => {
     return entries.value.reduce((acc, { amount, paid   }) => {
-      return paid ? acc + amount : acc
+      return paid && amount < 0 ? acc + amount : acc
     }, 0)
   })
 

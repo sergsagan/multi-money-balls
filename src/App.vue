@@ -6,7 +6,7 @@
 defineOptions({
   name: 'App'
 });
-window.addEventListener('contextmenu', (e) => {
+/*window.addEventListener('contextmenu', (e) => {
   e.preventDefault();
-})
+})*/
 </script>
