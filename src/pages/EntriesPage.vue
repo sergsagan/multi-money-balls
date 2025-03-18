@@ -27,8 +27,8 @@ const storeEntries = useStoreEntries()
           item-key="id"
           tag="div"
         >
-          <template #item="{element}">
-            <Entry :key="element.id" :entry="element" />
+          <template #item="{element, index}">
+            <Entry :key="element.id" :entry="element" :index="index" />
           </template>
         </Sortable>
 

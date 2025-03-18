@@ -34,3 +34,16 @@ input::-webkit-inner-spin-button {
     opacity: 0;
   }
 }
+
+.q-chip__icon--left {
+  margin-right: 0;
+}
+
+.q-chip__icon {
+  margin: 0;
+}
+
+.running-balance {
+  right: -5px;
+  bottom: -9px;
+}

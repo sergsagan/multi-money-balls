@@ -4,15 +4,18 @@ import { useCurrencify } from 'src/composables/useCurrencify.js'
 import { useStoreEntries } from 'stores/storeEntries.js'
 import { useQuasar } from 'quasar'
 import vSelectAll from 'src/directives/directiveSelectAll.js'
+import { useStoreSettings } from 'stores/storeSettings.js'
 
 const props = defineProps({
   entry: { type: Object, required: true },
+  index: { type: Number, required: true },
 })
 
 const $q = useQuasar()
 
 /* stores */
 const storeEntries = useStoreEntries()
+const storeSettings = useStoreSettings()
 
 /* slide left */
 const onEntrySlideLeft = ({ reset }) => {
@@ -22,6 +25,14 @@ const onEntrySlideLeft = ({ reset }) => {
 
 /* slide right */
 const onEntrySlideRight = ({ reset }) => {
+  if (storeSettings.settings.promptToDelete) {
+    promptToDelete(reset)
+  } else {
+    storeEntries.deleteEntry(props.entry?.id)
+  }
+}
+
+const promptToDelete = reset => {
   $q.dialog({
     title: 'Delete',
     message: `
@@ -71,9 +82,9 @@ const onAmountUpdate = value => {
     <template v-slot:right>
       <q-icon name="delete" />
     </template>
-    <q-item>
+    <q-item class="row">
       <q-item-section
-        class="text-weight-bold"
+        class="text-weight-bold col"
         :class="[
           useAmountColorClass(entry.amount),
           { 'text-strike' : entry.paid }
@@ -104,20 +115,24 @@ const onAmountUpdate = value => {
 
       <q-item-section
         side
-        class="text-weight-bold"
+        class="text-weight-bold relative-position col"
         :class="[
           useAmountColorClass(entry.amount),
           { 'text-strike' : entry.paid }
         ]"
       >
-        {{ useCurrencify(entry.amount) }}
+        <span :class="{ 'text-strike' : entry.paid }">
+          {{ useCurrencify(entry.amount) }}
+        </span>
+
         <q-popup-edit
           :model-value="entry.amount"
           @save="onAmountUpdate"
           auto-save
           v-slot="scope"
           :cover="false"
-          anchor="top left"
+          anchor="top right"
+          self="top right"
           :offset="[16, 12]"
           buttons
           label-set="Ok"
@@ -133,6 +148,18 @@ const onAmountUpdate = value => {
             v-select-all
           />
         </q-popup-edit>
+        <q-chip
+          v-if="storeSettings.settings.showRunningBalance"
+          :class="useAmountColorClass(storeEntries.runningBalances[index])"
+          class="running-balance absolute-bottom-right"
+          outline
+          dense
+          icon="event"
+          color="primary"
+          size="9px"
+        >
+          {{ useCurrencify(storeEntries.runningBalances[index]) }}
+        </q-chip>
       </q-item-section>
 
       <q-item-section

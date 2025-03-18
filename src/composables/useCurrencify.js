@@ -1,3 +1,6 @@
+import { useStoreSettings } from 'stores/storeSettings.js'
+const storeSettings = useStoreSettings()
+
 export function useCurrencify(amount) {
   let posNegSymbol = ''
   if (amount > 0) {
@@ -6,7 +9,7 @@ export function useCurrencify(amount) {
     posNegSymbol = '-'
   }
 
-  const currencySymbol = '$'
+  const currencySymbol = storeSettings.settings.currencySymbol
 
   const amountPositive = Math.abs(amount)
 
