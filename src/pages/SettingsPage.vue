@@ -2,6 +2,7 @@
 import { useStoreSettings} from 'stores/storeSettings.js'
 import vSelectAll from 'src/directives/directiveSelectAll.js'
 const storeSettings = useStoreSettings()
+const currency = ['$', '€', '£']
 </script>
 <template>
   <q-page>
@@ -27,12 +28,7 @@ const storeSettings = useStoreSettings()
         </q-item>
         <q-item tag="label" v-ripple>
           <q-item-section>
-            <q-input
-              outlined
-              v-model="storeSettings.settings.currencySymbol"
-              label="Currency Symbol"
-              v-select-all
-            />
+            <q-select outlined v-select-all v-model="storeSettings.settings.currencySymbol" :options="currency" label="Currency Symbol" />
           </q-item-section>
         </q-item>
 

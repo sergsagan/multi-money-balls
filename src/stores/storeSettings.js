@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia'
 import { reactive, watch } from 'vue'
 import { Dark } from 'quasar'
+import { useExchangeRates } from 'src/composables/useExchangeRates.js'
 
 export const useStoreSettings = defineStore("settings", () => {
   /* state */
-
   const settings = reactive({
     promptToDelete: true,
     showRunningBalance: false,
     currencySymbol: '$',
-    darkMode: true
+    darkMode: true,
+    exchangeRates: {}
   })
 
   watch(() => settings.darkMode, value => {
@@ -18,7 +19,10 @@ export const useStoreSettings = defineStore("settings", () => {
   /* getters */
 
   /* actions */
+  async function fetchExchangeRates() {
+    settings.exchangeRates = await useExchangeRates() // Оновлюємо курси валют
+  }
 
   /* returns */
-  return { settings }
+  return { settings, fetchExchangeRates }
 })
