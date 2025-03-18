@@ -5,6 +5,7 @@ import { useStoreEntries } from 'stores/storeEntries.js'
 import { useQuasar } from 'quasar'
 import vSelectAll from 'src/directives/directiveSelectAll.js'
 import { useStoreSettings } from 'stores/storeSettings.js'
+import { useLightOrDark } from 'src/composables/useLightOrDark.js'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -74,7 +75,9 @@ const onAmountUpdate = value => {
     @right="onEntrySlideRight"
     left-color="positive"
     right-color="negative"
-    :class="{ 'bg-grey-2' : entry.paid }"
+    :class="!entry.paid
+    ? useLightOrDark('bg-white', 'bg-black')
+    : useLightOrDark('bg-grey-2', 'bg-grey-10')"
   >
     <template v-slot:left>
       <q-icon name="done" />

@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue'
 import { useStoreEntries } from 'stores/storeEntries.js'
 import vSelectAll from 'src/directives/directiveSelectAll.js'
+import { useLightOrDark } from 'src/composables/useLightOrDark.js'
 
 /* stores */
 const storeEntries = useStoreEntries()
@@ -37,7 +38,7 @@ const addEntryFormSubmit = () => {
         ref="categoryRef"
         outlined
         dense
-        bg-color="white"
+        :bg-color="useLightOrDark('white', 'black')"
         placeholder="Category"
         v-model="addEntryForm.category"
         v-select-all
@@ -48,7 +49,7 @@ const addEntryFormSubmit = () => {
         outlined
         dense
         input-class="text-right"
-        bg-color="white"
+        :bg-color="useLightOrDark('white', 'black')"
         placeholder="Amount"
         v-model.number="addEntryForm.amount"
         type="number"
