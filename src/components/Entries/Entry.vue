@@ -6,6 +6,7 @@ import { useQuasar } from 'quasar'
 import vSelectAll from 'src/directives/directiveSelectAll.js'
 import { useStoreSettings } from 'stores/storeSettings.js'
 import { useLightOrDark } from 'src/composables/useLightOrDark.js'
+import { computed } from 'vue'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -17,6 +18,8 @@ const $q = useQuasar()
 /* stores */
 const storeEntries = useStoreEntries()
 const storeSettings = useStoreSettings()
+
+const exchangeRate = computed(() => storeSettings.settings.exchangeRates[storeSettings.settings.currencySymbol] || 1)
 
 /* slide left */
 const onEntrySlideLeft = ({ reset }) => {
@@ -66,8 +69,13 @@ const onCategoryUpdate = value => {
 }
 
 const onAmountUpdate = value => {
-  storeEntries.updateEntry(props.entry?.id, { amount: value })
-}
+  storeEntries.updateEntry(props.entry.id, { amount: value / exchangeRate.value });
+};
+
+const editableAmount = computed({
+  get: () => (props.entry.amount * exchangeRate.value).toFixed(2),
+  set: onAmountUpdate
+});
 </script>
 <template>
   <q-slide-item
@@ -129,7 +137,7 @@ const onAmountUpdate = value => {
         </span>
 
         <q-popup-edit
-          :model-value="entry.amount"
+          :model-value="editableAmount"
           @save="onAmountUpdate"
           auto-save
           v-slot="scope"
