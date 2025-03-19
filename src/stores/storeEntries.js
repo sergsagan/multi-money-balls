@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { uid, Notify, LocalStorage } from 'quasar'
 
 export const useStoreEntries = defineStore("entries", () => {
@@ -111,6 +111,7 @@ export const useStoreEntries = defineStore("entries", () => {
   const deleteEntry = entryId => {
     const index = getEntryIndexId(entryId)
     entries.value.splice(index, 1)
+    removeSlideItemIfExists(entryId)
     Notify.create({
       message: 'Entry deleted',
       position: 'top'
@@ -142,6 +143,13 @@ export const useStoreEntries = defineStore("entries", () => {
   /* helpers */
   const getEntryIndexId = entryId => {
     return entries.value.findIndex(entry => entry.id === entryId)
+  }
+
+  const removeSlideItemIfExists = entryId => {
+    nextTick(() => {
+      const slideItem = document.querySelector(`#id-${entryId}`)
+      if (slideItem) slideItem.remove()
+    })
   }
 
   /* returns */

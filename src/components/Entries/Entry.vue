@@ -83,6 +83,7 @@ const editableAmount = computed({
     @right="onEntrySlideRight"
     left-color="positive"
     right-color="negative"
+    :id="`id-${ entry.id }`"
     :class="!entry.paid
     ? useLightOrDark('bg-white', 'bg-black')
     : useLightOrDark('bg-grey-2', 'bg-grey-10')"
