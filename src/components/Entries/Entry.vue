@@ -19,8 +19,6 @@ const $q = useQuasar()
 const storeEntries = useStoreEntries()
 const storeSettings = useStoreSettings()
 
-const exchangeRate = computed(() => storeSettings.settings.exchangeRates[storeSettings.settings.currencySymbol] || 1)
-
 /* slide left */
 const onEntrySlideLeft = ({ reset }) => {
   storeEntries.updateEntry(props.entry?.id, { paid: !props.entry?.paid })
@@ -69,12 +67,12 @@ const onCategoryUpdate = value => {
 }
 
 const onAmountUpdate = value => {
-  storeEntries.updateEntry(props.entry.id, { amount: value / exchangeRate.value });
+  storeEntries.updateEntry(props.entry.id, { amount: value });
 };
 
 const editableAmount = computed({
-  get: () => (props.entry.amount * exchangeRate.value).toFixed(2),
-  set: onAmountUpdate
+  get: () => props.entry.amount.toFixed(2),
+  set: (newValue) => onAmountUpdate(newValue)
 });
 </script>
 <template>

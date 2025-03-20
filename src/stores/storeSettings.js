@@ -18,28 +18,30 @@ export const useStoreSettings = defineStore("settings", () => {
     Dark.set(value)
   }, { immediate: true })
 
-  watch(settings, () => {
-    saveSettings()
-  })
-
-  /* getters */
+  // watch save settings
+  watch(() => settings.currencySymbol, () => {
+    saveSettings();
+  });
 
   /* actions */
   async function fetchExchangeRates() {
-    settings.exchangeRates = await useExchangeRates() // Оновлюємо курси валют
+    settings.exchangeRates = await useExchangeRates()
   }
 
   const saveSettings = () => {
-    LocalStorage.set('settings', settings)
-  }
+    LocalStorage.set('settings', JSON.parse(JSON.stringify(settings)));
+  };
 
   const loadSettings = () => {
-    const savedSettings = LocalStorage.getItem('settings')
+    const savedSettings = LocalStorage.getItem('settings');
     if (savedSettings) {
-      Object.assign(settings, savedSettings)
+      Object.assign(settings, savedSettings);
     }
-  }
 
+    if (settings.currencySymbol !== savedSettings?.currencySymbol) {
+      settings.currencySymbol = savedSettings?.currencySymbol || '$';
+    }
+  };
   /* returns */
   return { settings, fetchExchangeRates, loadSettings }
 })

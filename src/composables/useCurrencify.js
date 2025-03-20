@@ -1,5 +1,4 @@
 import { useStoreSettings } from 'stores/storeSettings.js'
-import { computed } from 'vue'
 const storeSettings = useStoreSettings()
 
 export function useCurrencify(amount) {
@@ -18,12 +17,6 @@ export function useCurrencify(amount) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
-
-  const exchangeRate = computed(() => storeSettings.settings.exchangeRates[currencySymbol] || 1)
-
-  if (currencySymbol !== '$') {
-    amountFormatted = (parseFloat(amountFormatted.replace(/,/g, '')) * exchangeRate.value).toFixed(2)
-  }
 
   return `${posNegSymbol} ${currencySymbol} ${amountFormatted}`
 }

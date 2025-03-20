@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { uid, Notify, LocalStorage } from 'quasar'
+import { useStoreSettings } from 'stores/storeSettings.js'
 
 export const useStoreEntries = defineStore("entries", () => {
   /* state */
+
+  const storeSettings = useStoreSettings()
   const entries = ref([
     {
       id: 'id1',
@@ -67,9 +70,22 @@ export const useStoreEntries = defineStore("entries", () => {
     }
   ])
 
-  watch(entries.value, () => {
-    saveEntries()
-  })
+  watch(() => storeSettings.settings.currencySymbol, (newCurrency, oldCurrency) => {
+    if (!oldCurrency || newCurrency === oldCurrency) return;
+
+    const newRate = storeSettings.settings.exchangeRates[newCurrency] || 1;
+
+    entries.value = entries.value.map(entry => {
+      if (!entry.originalAmount) {
+        entry.originalAmount = entry.amount;
+      }
+      const convertedAmount = Number((entry.originalAmount * newRate).toFixed(2));
+
+      return { ...entry, amount: convertedAmount };
+    });
+
+    saveEntries();
+  });
 
   const options = reactive({
     sort: false
@@ -119,9 +135,16 @@ export const useStoreEntries = defineStore("entries", () => {
   }
 
   const updateEntry = (entryId, updates) => {
-    const index = getEntryIndexId(entryId)
-    Object.assign(entries.value[index], updates)
-  }
+    const index = getEntryIndexId(entryId);
+
+    if (updates.amount !== undefined) {
+      updates.amount = Number(updates.amount);
+    }
+
+    Object.assign(entries.value[index], updates);
+
+    saveEntries();
+  };
 
   const sortEnd = ({ oldIndex, newIndex }) => {
     const movedEntry = entries.value[oldIndex]
@@ -130,15 +153,21 @@ export const useStoreEntries = defineStore("entries", () => {
   }
 
   const saveEntries = () => {
-    LocalStorage.set('entries', entries.value)
-  }
+    LocalStorage.set('entries', entries.value.map(entry => ({
+      ...entry,
+      amount: Number(entry.amount.toFixed(2))
+    })));
+  };
 
   const loadEntries = () => {
-    const savedEntries = LocalStorage.getItem('entries')
+    const savedEntries = LocalStorage.getItem('entries');
     if (savedEntries) {
-      Object.assign(entries.value, savedEntries)
+      entries.value = savedEntries.map(entry => ({
+        ...entry,
+        amount: Number(entry.amount)
+      }));
     }
-  }
+  };
 
   /* helpers */
   const getEntryIndexId = entryId => {
