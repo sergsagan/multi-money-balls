@@ -1,12 +1,14 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import NavLink from 'components/Nav/NavLink.vue'
 import { useStoreEntries } from 'stores/storeEntries.js'
 import { useRoute } from 'vue-router'
 import { useLightOrDark } from 'src/composables/useLightOrDark.js'
+import { useStoreSettings } from 'stores/storeSettings.js'
 
 /* stores */
 const storeEntries = useStoreEntries()
+const storeSettings = useStoreSettings()
 const route = useRoute()
 
 const navLinks = [
@@ -27,6 +29,9 @@ const leftDrawerOpen = ref(false)
 function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+const usdToEur = computed(() => storeSettings.settings.exchangeRates['€']?.toFixed(2) || '--')
+const usdToGbp = computed(() => storeSettings.settings.exchangeRates['£']?.toFixed(2) || '--')
 </script>
 <template>
   <q-layout view="hHh lpR lFf">
@@ -45,6 +50,12 @@ function toggleLeftDrawer () {
           <div class="absolute-center">
             <q-icon name="savings" />
             Moneyballs
+          </div>
+        </q-toolbar-title>
+
+        <q-toolbar-title class="q-ml-md q-mr-md" shrink>
+          <div class="text-caption text-white q-ml-md q-hidden-xs">
+            USD/EUR: {{ usdToEur }} | USD/GBP: {{ usdToGbp }}
           </div>
         </q-toolbar-title>
 

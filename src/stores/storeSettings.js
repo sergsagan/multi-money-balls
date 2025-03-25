@@ -3,6 +3,8 @@ import { reactive, watch } from 'vue'
 import { Dark, LocalStorage } from 'quasar'
 import { useExchangeRates } from 'src/composables/useExchangeRates.js'
 
+let updateInterval = null
+
 export const useStoreSettings = defineStore("settings", () => {
   /* state */
   const settings = reactive({
@@ -28,6 +30,16 @@ export const useStoreSettings = defineStore("settings", () => {
     settings.exchangeRates = await useExchangeRates()
   }
 
+  async function startAutoUpdateRates() {
+    await fetchExchangeRates()
+
+    if (updateInterval) clearInterval(updateInterval)
+
+    updateInterval = setInterval(() => {
+      fetchExchangeRates()
+    }, 10 * 60 * 1000)
+  }
+
   const saveSettings = () => {
     LocalStorage.set('settings', JSON.parse(JSON.stringify(settings)));
   };
@@ -41,6 +53,8 @@ export const useStoreSettings = defineStore("settings", () => {
     if (settings.currencySymbol !== savedSettings?.currencySymbol) {
       settings.currencySymbol = savedSettings?.currencySymbol || '$';
     }
+
+    void startAutoUpdateRates();
   };
   /* returns */
   return { settings, fetchExchangeRates, loadSettings }
