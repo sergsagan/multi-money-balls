@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue'
 import { useStoreEntries } from 'stores/storeEntries.js'
 import vSelectAll from 'src/directives/directiveSelectAll.js'
 import { useLightOrDark } from 'src/composables/useLightOrDark.js'
+import { Notify } from 'quasar'
 
 /* stores */
 const storeEntries = useStoreEntries()
@@ -25,6 +26,13 @@ const addEntryFormReset = () => {
 }
 
 const addEntryFormSubmit = () => {
+  if (!addEntryForm.category || addEntryForm.amount === null || isNaN(addEntryForm.amount)) {
+    Notify.create({
+      type: 'warning',
+      message: 'Please fill in both category and amount fields'
+    })
+    return
+  }
   storeEntries.addEntry(addEntryForm)
   addEntryFormReset()
 }

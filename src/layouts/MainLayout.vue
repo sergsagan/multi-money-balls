@@ -8,7 +8,7 @@ import { useStoreSettings } from 'stores/storeSettings.js'
 
 /* stores */
 const storeEntries = useStoreEntries()
-const storeSettings = useStoreSettings()
+const { settings } = useStoreSettings()
 const route = useRoute()
 
 const navLinks = [
@@ -30,8 +30,19 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-const usdToEur = computed(() => storeSettings.settings.exchangeRates['€']?.toFixed(2) || '--')
-const usdToGbp = computed(() => storeSettings.settings.exchangeRates['£']?.toFixed(2) || '--')
+const usdToEur = computed(() => settings.exchangeRates['€']?.toFixed(2) || '-')
+const usdToGbp = computed(() => settings.exchangeRates['£']?.toFixed(2) || '-')
+
+const currencyRatesText = computed(() => {
+  const current = settings.currencySymbol
+  if (current === '€') {
+    return `EUR/USD: ${(1 / settings.exchangeRates['€']).toFixed(2)} | EUR/GBP: ${(settings.exchangeRates['£'] / settings.exchangeRates['€']).toFixed(2)}`
+  }
+  if (current === '£') {
+    return `GBP/USD: ${(1 / settings.exchangeRates['£']).toFixed(2)} | GBP/EUR: ${(settings.exchangeRates['€'] / settings.exchangeRates['£']).toFixed(2)}`
+  }
+  return `USD/EUR: ${usdToEur.value} | USD/GBP: ${usdToGbp.value}`
+})
 </script>
 <template>
   <q-layout view="hHh lpR lFf">
@@ -49,13 +60,13 @@ const usdToGbp = computed(() => storeSettings.settings.exchangeRates['£']?.toFi
         <q-toolbar-title>
           <div class="absolute-center">
             <q-icon name="savings" />
-            Moneyballs
+            MultiMoneyballs
           </div>
         </q-toolbar-title>
 
         <q-toolbar-title class="q-ml-md q-mr-md" shrink>
           <div class="text-caption text-white q-ml-md q-hidden-xs">
-            USD/EUR: {{ usdToEur }} | USD/GBP: {{ usdToGbp }}
+            {{ currencyRatesText }}
           </div>
         </q-toolbar-title>
 
