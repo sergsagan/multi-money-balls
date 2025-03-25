@@ -9,7 +9,7 @@ export async function useExchangeRates() {
       '£': data.rates.GBP,
     }
   } catch (error) {
-    console.error('Помилка отримання валютних курсів:', error)
+    console.error('Error retrieving exchange rates:', error)
     return { '€': 0.9, '£': 0.75 }
   }
 }

@@ -2,27 +2,18 @@
 import { computed, ref } from 'vue'
 import NavLink from 'components/Nav/NavLink.vue'
 import { useStoreEntries } from 'stores/storeEntries.js'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useLightOrDark } from 'src/composables/useLightOrDark.js'
-import { useStoreSettings } from 'stores/storeSettings.js'
+import { useAuth } from 'stores/useAuth'
+import { useQuasar } from 'quasar'
+import CurrencyRates from 'components/CurrencyRates.vue'
 
 /* stores */
 const storeEntries = useStoreEntries()
-const { settings } = useStoreSettings()
 const route = useRoute()
-
-const navLinks = [
-  {
-    title: 'Entries',
-    icon: 'payment',
-    link: '/'
-  },
-  {
-    title: 'Settings',
-    icon: 'settings',
-    link: '/settings'
-  }
-]
+const router = useRouter()
+const auth = useAuth()
+const $q = useQuasar()
 
 const leftDrawerOpen = ref(false)
 
@@ -30,29 +21,43 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
-const usdToEur = computed(() => settings.exchangeRates['€']?.toFixed(2) || '-')
-const usdToGbp = computed(() => settings.exchangeRates['£']?.toFixed(2) || '-')
+const navLinks = computed(() => {
+  const baseLinks = [
+    { title: 'Entries', icon: 'payment', link: '/' },
+    { title: 'Settings', icon: 'settings', link: '/settings' }
+  ]
 
-const currencyRatesText = computed(() => {
-  const current = settings.currencySymbol
-  if (current === '€') {
-    return `EUR/USD: ${(1 / settings.exchangeRates['€']).toFixed(2)} | EUR/GBP: ${(settings.exchangeRates['£'] / settings.exchangeRates['€']).toFixed(2)}`
-  }
-  if (current === '£') {
-    return `GBP/USD: ${(1 / settings.exchangeRates['£']).toFixed(2)} | GBP/EUR: ${(settings.exchangeRates['€'] / settings.exchangeRates['£']).toFixed(2)}`
-  }
-  return `USD/EUR: ${usdToEur.value} | USD/GBP: ${usdToGbp.value}`
+  const authLink = auth.isLoggedIn
+    ? {
+      title: 'Log out',
+      icon: 'logout',
+      action: () => {
+        auth.logout(() => router.push('/login'))
+      }
+    }
+    : {
+      title: 'Log in',
+      icon: 'login',
+      link: '/login'
+    }
+
+  return [...baseLinks, authLink]
 })
+
+function handleNavClick(link) {
+  if (link.action) {
+    link.action()
+  } else {
+    router.push(link.link)
+  }
+}
 </script>
 <template>
   <q-layout view="hHh lpR lFf">
     <q-header :elevated="useLightOrDark(true, false)">
       <q-toolbar>
         <q-btn
-          flat
-          dense
-          round
-          icon="menu"
+          flat dense round icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
@@ -65,20 +70,26 @@ const currencyRatesText = computed(() => {
         </q-toolbar-title>
 
         <q-toolbar-title class="q-ml-md q-mr-md" shrink>
-          <div class="text-caption text-white q-ml-md q-hidden-xs">
-            {{ currencyRatesText }}
-          </div>
+          <CurrencyRates />
         </q-toolbar-title>
 
         <q-btn
           v-if="route.fullPath === '/'"
           @click="storeEntries.options.sort = !storeEntries.options.sort"
           :label="!storeEntries.options.sort ? 'Sort' : 'Done'"
-          flat
-          no-caps
-          dense
+          flat no-caps dense
         />
 
+        <q-btn
+          v-if="auth.isLoggedIn"
+          flat
+          dense
+          icon="account_circle"
+          :label="$q.screen.gt.sm ? auth.user?.name : ''"
+          no-caps
+          class="q-ml-sm"
+          style="color: white"
+        />
       </q-toolbar>
     </q-header>
 
@@ -91,17 +102,13 @@ const currencyRatesText = computed(() => {
       bordered
     >
       <q-list>
-        <q-item-label
-          class="text-white"
-          header
-        >
-          Navigation
-        </q-item-label>
+        <q-item-label class="text-white" header>Navigation</q-item-label>
 
         <NavLink
           v-for="link in navLinks"
           :key="link.title"
           v-bind="link"
+          @click="handleNavClick(link)"
         />
       </q-list>
     </q-drawer>
