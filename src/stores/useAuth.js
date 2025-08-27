@@ -14,7 +14,6 @@ export const useAuth = defineStore('auth', () => {
   function logout(callback = null) {
     user.value = null
     LocalStorage.remove('user')
-    console.log('Logging out...')
     if (typeof callback === 'function') callback()
   }
 
