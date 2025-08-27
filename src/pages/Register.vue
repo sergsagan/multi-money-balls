@@ -75,9 +75,9 @@ const resetForm = () => {
       />
 
       <div>
-        <q-btn label="Login" type="submit" color="primary"/>
+        <q-btn label="Register" type="submit" color="primary"/>
         <q-btn label="Reset" @click="resetForm" color="primary" flat class="q-ml-sm" />
-        <NavLink to="/register" title="Register"/>
+        <NavLink to="login" color="primary" title="Login"/>
       </div>
     </q-form>
   </div>

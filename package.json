@@ -1,9 +1,9 @@
 {
-  "name": "money-balls",
+  "name": "multi-money-balls",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "app-money-balls",
-  "author": "sergsagan <sergey.martynuk@gmail.com>",
+  "productName": "multi-money-balls",
+  "author": "sergsagan",
   "type": "module",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
+    "caniuse-lite": "^1.0.30001737",
     "pinia": "^3.0.1",
     "quasar": "^2.16.0",
     "sortablejs": "^1.15.6",
