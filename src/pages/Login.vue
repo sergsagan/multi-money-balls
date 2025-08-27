@@ -3,7 +3,6 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuth } from 'stores/useAuth'
-import NavLink from 'components/Nav/NavLink.vue'
 
 const router = useRouter()
 const $q = useQuasar()
@@ -77,7 +76,6 @@ const resetForm = () => {
       <div>
         <q-btn label="Login" type="submit" color="primary"/>
         <q-btn label="Reset" @click="resetForm" color="primary" flat class="q-ml-sm" />
-        <NavLink to="/register" title="Register"/>
       </div>
     </q-form>
   </div>

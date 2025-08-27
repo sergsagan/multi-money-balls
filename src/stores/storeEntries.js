@@ -178,7 +178,7 @@ export const useStoreEntries = defineStore("entries", () => {
     nextTick(() => {
       const slideItem = document.querySelector(`#id-${entryId}`)
       if (slideItem) slideItem.remove()
-    }).then(r => {return r})
+    })
   }
 
   /* returns */

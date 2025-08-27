@@ -7,7 +7,6 @@ const routes = [
       { path: 'settings', component: () => import('pages/SettingsPage.vue') },
       { path: 'login', component: () => import('pages/Login.vue') },
       { path: 'logout', component: () => import('pages/Login.vue') },
-      { path: 'register', component: () => import('pages/Register.vue') },
     ]
   },
 

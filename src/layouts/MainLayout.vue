@@ -5,6 +5,7 @@ import { useStoreEntries } from 'stores/storeEntries.js'
 import { useRoute, useRouter } from 'vue-router'
 import { useLightOrDark } from 'src/composables/useLightOrDark.js'
 import { useAuth } from 'stores/useAuth'
+import { useQuasar } from 'quasar'
 import CurrencyRates from 'components/CurrencyRates.vue'
 
 /* stores */
@@ -12,6 +13,7 @@ const storeEntries = useStoreEntries()
 const route = useRoute()
 const router = useRouter()
 const auth = useAuth()
+const $q = useQuasar()
 
 const leftDrawerOpen = ref(false)
 
@@ -29,7 +31,6 @@ const navLinks = computed(() => {
     ? {
       title: 'Log out',
       icon: 'logout',
-      link: '/logout',
       action: () => {
         auth.logout(() => router.push('/login'))
       }
@@ -68,7 +69,7 @@ function handleNavClick(link) {
           </div>
         </q-toolbar-title>
 
-        <q-toolbar-title v-if="auth.isLoggedIn" class="q-ml-md q-mr-md" shrink>
+        <q-toolbar-title class="q-ml-md q-mr-md" shrink>
           <CurrencyRates />
         </q-toolbar-title>
 
@@ -108,7 +109,6 @@ function handleNavClick(link) {
           :key="link.title"
           v-bind="link"
           @click="handleNavClick(link)"
-          :title="link.title"
         />
       </q-list>
     </q-drawer>
